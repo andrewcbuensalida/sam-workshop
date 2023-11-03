@@ -5,7 +5,7 @@ https://catalog.workshops.aws/complete-aws-sam/en-US/module-1-sam-setup/10-initi
 
 =====================================================
 
-can invoke lambda locally by 2 ways:
+can invoke lambda locally by 2 ways (these create .aws-sam folder):
 
 1. Invoke once with
   sam local invoke --event events/event.json
@@ -93,4 +93,51 @@ This will create codepipeline.yaml, assume-role.sh, /pipeline.
 Deploy the cloudformation stack of the pipeline aka sam-app-pipeline (not actual stack of the hello-world app)
   sam deploy -t codepipeline.yaml --stack-name sam-app-pipeline --capabilities=CAPABILITY_IAM
 
-test
+Got an error
+  Connection GetRepository Connection is not available aws codepipeline
+
+Needed to go into CodePipeline console and edit the source and manually approve the github app connection.
+
+Action Provider should be GitHub (Version 2)
+
+Now getting an error in the BuildAndPackage step of the pipeline.
+  An error occurred (AccessDenied) when calling the AssumeRole operation: User: arn:aws:sts::597043972440:assumed-role/sam-app-pipeline-CodeBuildServiceRole-CPzfCZy69auL/AWSCodeBuild-96b222ee-2cb8-49b3-a17c-d140c0e394d9 is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::597043972440:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-kNooKloc8vjb
+
+Now trying to delete sam-app-pipeline stack with
+  aws cloudformation delete-stack  --stack-name sam-app-pipeline
+But get this error
+  An error occurred (ValidationError) when calling the DeleteStack operation: Role arn:aws:iam::597043972440:role/sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp is invalid or cannot be assumed
+
+Going in cloudformation console, and clicking the url to that role, it cannot be found.
+Might have to recreate that role (arn:aws:iam::597043972440:role/sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp), as mentioned in
+  https://thewerner.medium.com/aws-cloud-formation-role-arn-aws-iam-xxx-is-invalid-or-cannot-be-assumed-14c17e1098e2
+
+Create an iam_role_cfn.json file.
+Create that role with aws-cli
+  aws iam create-role --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
+
+And then attach the Admin policy ARN:
+  aws iam attach-role-policy --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+
+Now when doing
+  aws cloudformation delete-stack  --stack-name sam-app-pipeline
+it doesn't give any error. When checking cloudformation, stack is still there, but there is a new role. Might have to do it with the other role that failed to delete.
+
+Repeat above with the other role.
+Create that role with aws-cli
+  aws iam create-role --role-name sam-app-pipeline-CodeBuildServiceRole-CPzfCZy69auL --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
+
+And then attach the Admin policy ARN:
+  aws iam attach-role-policy --role-name sam-app-pipeline-CodeBuildServiceRole-CPzfCZy69auL --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+
+Still fails. The two roles cannot be found again. Maybe there are race conditions.
+
+  User: arn:aws:iam::782908857608:user/sts-role-assumer is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::597043972440:role/sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp (Service: AWSSecurityTokenService; Status Code: 403; Error Code: AccessDenied; Request ID: 3efea1a5-16d8-4d34-ad60-eeb106ab4213; Proxy: null)
+
+Might have to recreate sts-role-assumer user and give admin policies.
+Didn't work maybe because the user that was created has account number 597043972440, not 782908857608. Don't know where 782908857608 is from.
+
+Managed to delete the sam-app-pipeline stack by recreating arn:aws:iam::597043972440:role/sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp, then going into cloudformation console, deleting stack then selecting to retain that role, not the other role.
+
+Doesn't work. Trying GitHub Actions now.
+
