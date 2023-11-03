@@ -38,7 +38,7 @@ Parameters:
     Default: "master"
   SamTemplate:
     Type: String
-    Default: "sam-app/template.yaml"
+    Default: "template.yaml"
   TestingRegion:
     Type: String
     Default: "us-west-1"

@@ -87,4 +87,5 @@ Do this for prod as well.
 The difference from the tutorial is the Git provider, which for me it's GitHub.
 
 What is the Git branch used for production deployments? master
-What is the template file path? sam-app/template.yaml (not sure if this is correct)
+
+This will create codepipeline.yaml, assume-role.sh, /pipeline.
