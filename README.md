@@ -93,3 +93,4 @@ This will create codepipeline.yaml, assume-role.sh, /pipeline.
 Deploy the cloudformation stack of the pipeline aka sam-app-pipeline (not actual stack of the hello-world app)
   sam deploy -t codepipeline.yaml --stack-name sam-app-pipeline --capabilities=CAPABILITY_IAM
 
+test
