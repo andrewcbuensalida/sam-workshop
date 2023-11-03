@@ -67,6 +67,24 @@ CI/CD
 
 Can generate deployment pipelines with
 
-AWS CodePipeline
-Github Actions
-Jenkins
+AWS CodePipeline, Github Actions, Jenkins
+
+AWS CodePipeline method:
+cd into sam-app
+Then
+  sam pipeline init --bootstrap
+Then follow this
+  https://catalog.workshops.aws/complete-aws-sam/en-US/module-4-cicd/module-4-cicd-codepipeline/50-sampipeinit#create-cloudformation-pipeline-template
+
+This will create the following required resources for the 'dev' configuration:
+        - Pipeline IAM user
+        - Pipeline execution role
+        - CloudFormation execution role
+        - Artifact bucket
+
+Do this for prod as well.
+
+The difference from the tutorial is the Git provider, which for me it's GitHub.
+
+What is the Git branch used for production deployments? master
+What is the template file path? sam-app/template.yaml (not sure if this is correct)
