@@ -76,7 +76,7 @@ Then
 Then follow this
   https://catalog.workshops.aws/complete-aws-sam/en-US/module-4-cicd/module-4-cicd-codepipeline/50-sampipeinit#create-cloudformation-pipeline-template
 
-This will create the following required resources for the 'dev' configuration:
+This will create the following required resources for the 'dev' configuration aka aws-sam-cli-managed-dev-pipeline-resources:
         - Pipeline IAM user
         - Pipeline execution role
         - CloudFormation execution role
@@ -89,3 +89,7 @@ The difference from the tutorial is the Git provider, which for me it's GitHub.
 What is the Git branch used for production deployments? master
 
 This will create codepipeline.yaml, assume-role.sh, /pipeline.
+
+Deploy the cloudformation stack of the pipeline aka sam-app-pipeline (not actual stack of the hello-world app)
+  sam deploy -t codepipeline.yaml --stack-name sam-app-pipeline --capabilities=CAPABILITY_IAM
+
