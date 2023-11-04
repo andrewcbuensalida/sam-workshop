@@ -142,5 +142,22 @@ Managed to delete the sam-app-pipeline stack by recreating the roles that failed
 If the aws-sam-cli-managed-default stack fails to delete, have to delete all items in the bucket first.
 
 ===========
-Doesn't work. Trying GitHub Actions now.
+CodePipeline doesn't work with GitHub. Trying GitHub Actions now.
+https://catalog.workshops.aws/complete-aws-sam/en-US/module-4-cicd/module-4-cicd-gh/50-sampipeinit
 
+  sam pipeline bootstrap --stage dev
+
+This creates the .aws-sam folder. Also creates the aws-sam-cli-managed-dev-pipeline-resources stack in cloudformation.
+
+Do the same for prod
+  sam pipeline bootstrap --stage prod
+
+Next
+  sam pipeline init
+This creates the instructions for github actions in 
+  .github\workflows\pipeline.yaml
+
+Next commit
+  git add .
+  git commit -m "Adding SAM CI/CD Pipeline definition"
+  git push
