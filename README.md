@@ -116,10 +116,10 @@ Might have to recreate that role (arn:aws:iam::597043972440:role/sam-app-pipelin
 
 Create an iam_role_cfn.json file.
 Create that role with aws-cli
-  aws iam create-role --role-name sam-app-pipeline-CodePipelineExecutionRole-SjVyCbQ0m1Ws --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
+  aws iam create-role --role-name aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-4bgm28eS2bjW --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
 
 And then attach the Admin policy ARN:
-  aws iam attach-role-policy --role-name sam-app-pipeline-CodePipelineExecutionRole-SjVyCbQ0m1Ws --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+  aws iam attach-role-policy --role-name aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-4bgm28eS2bjW --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
 Now when doing
   aws cloudformation delete-stack  --stack-name sam-app-pipeline
