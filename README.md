@@ -170,3 +170,10 @@ Try to edit samconfig.toml [default.package.parameters] resolve_s3 to false?
 Not sure if the resolve_s3 in [default.deploy.parameters] should also be false.
 I guess so because it failed in the deploy-testing > Deploy to testing account step
   Cannot use both --resolve-s3 and --s3-bucket parameters in non-guided deployments. Please use only one or use the --guided option for a guided deployment.
+
+Now errored in deploy-testing > Deploy to testing account step
+  Aborted!
+  Deploy this changeset? [y/N]: 
+  Error: Process completed with exit code 1.
+
+Might have to change confirm_changeset = false from true
