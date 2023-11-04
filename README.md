@@ -44,6 +44,8 @@ input the access key and secret key
 Deploy the app with
   sam deploy --guided
 
+This creates aws-sam-cli-managed-default (s3 bucket) and sam-app (lambdas, api gateways, iam roles) stack in cloudformation.
+
 Run with --guided if running for the first time so it will save the configuration to samconfig.toml.
 
 For AWS Region, use us-west-1.
@@ -161,3 +163,7 @@ Next commit
   git add .
   git commit -m "Adding SAM CI/CD Pipeline definition"
   git push
+
+Getting an error in the GitHub Actions workflow, build-and-package step, Upload artifacts to testing artifact buckets, 
+  Cannot use both --resolve-s3 and --s3-bucket parameters. Please use only one.
+Try to edit samconfig.toml resolve_s3 to false?
