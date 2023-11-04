@@ -114,10 +114,10 @@ Might have to recreate that role (arn:aws:iam::597043972440:role/sam-app-pipelin
 
 Create an iam_role_cfn.json file.
 Create that role with aws-cli
-  aws iam create-role --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
+  aws iam create-role --role-name sam-app-pipeline-CodePipelineExecutionRole-SjVyCbQ0m1Ws --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
 
 And then attach the Admin policy ARN:
-  aws iam attach-role-policy --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+  aws iam attach-role-policy --role-name sam-app-pipeline-CodePipelineExecutionRole-SjVyCbQ0m1Ws --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
 Now when doing
   aws cloudformation delete-stack  --stack-name sam-app-pipeline
@@ -125,10 +125,10 @@ it doesn't give any error. When checking cloudformation, stack is still there, b
 
 Repeat above with the other role.
 Create that role with aws-cli
-  aws iam create-role --role-name sam-app-pipeline-CodeBuildServiceRole-CPzfCZy69auL --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
+  aws iam create-role --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-1q9vLfj4qLFY --assume-role-policy-document file://iam_role_cfn.json --description "TEMP ROLE: Allow CFN to administer 'zombie' stack"
 
 And then attach the Admin policy ARN:
-  aws iam attach-role-policy --role-name sam-app-pipeline-CodeBuildServiceRole-CPzfCZy69auL --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+  aws iam attach-role-policy --role-name sam-app-pipeline-PipelineStackCloudFormationExecuti-1q9vLfj4qLFY --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
 Still fails. The two roles cannot be found again. Maybe there are race conditions.
 
@@ -137,7 +137,10 @@ Still fails. The two roles cannot be found again. Maybe there are race condition
 Might have to recreate sts-role-assumer user and give admin policies.
 Didn't work maybe because the user that was created has account number 597043972440, not 782908857608. Don't know where 782908857608 is from.
 
-Managed to delete the sam-app-pipeline stack by recreating arn:aws:iam::597043972440:role/sam-app-pipeline-PipelineStackCloudFormationExecuti-SSL7OT1Acdlp, then going into cloudformation console, deleting stack then selecting to retain that role, not the other role.
+Managed to delete the sam-app-pipeline stack by recreating the roles that failed to delete, then going into cloudformation console, deleting stack again then selecting to retain the cloudformation role that failed to delete, not the other role.
 
+If the aws-sam-cli-managed-default stack fails to delete, have to delete all items in the bucket first.
+
+===========
 Doesn't work. Trying GitHub Actions now.
 
