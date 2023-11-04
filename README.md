@@ -177,3 +177,16 @@ Now errored in deploy-testing > Deploy to testing account step
   Error: Process completed with exit code 1.
 
 Might have to change confirm_changeset = false from true
+
+It works now. Pushing to master deploys to dev(stage) and prod environments.
+Should probably change the master to develop so it deploys to dev(stage) when merging to develop branch .github\workflows\pipeline.yaml 
+  deploy-testing:
+    if: github.ref == 'refs/heads/develop'
+
+OR make a separate pipeline.yaml for dev and for prod
+
+  on:
+    push:
+      branches:
+        - 'develop'
+        - 'feature**'
