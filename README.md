@@ -166,4 +166,7 @@ Next commit
 
 Getting an error in the GitHub Actions workflow, build-and-package step, Upload artifacts to testing artifact buckets, 
   Cannot use both --resolve-s3 and --s3-bucket parameters. Please use only one.
-Try to edit samconfig.toml resolve_s3 to false?
+Try to edit samconfig.toml [default.package.parameters] resolve_s3 to false? 
+Not sure if the resolve_s3 in [default.deploy.parameters] should also be false.
+I guess so because it failed in the deploy-testing > Deploy to testing account step
+  Cannot use both --resolve-s3 and --s3-bucket parameters in non-guided deployments. Please use only one or use the --guided option for a guided deployment.
