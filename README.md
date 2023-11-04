@@ -190,3 +190,5 @@ OR make a separate pipeline.yaml for dev and for prod
       branches:
         - 'develop'
         - 'feature**'
+
+Notice that the prod stack api gateway has both prod and stage. The dev stack api gateway also has both prod and stage.
